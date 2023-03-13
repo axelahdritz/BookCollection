@@ -8,7 +8,7 @@ from scripts.utilities import is_page_empty
 
 class InternetArchiveBook:
 
-  def __init__(self, url, start_page, end_page, is_borrow, last_page_full, page_num_diff):
+  def __init__(self, url, start_page, end_page, is_borrow, last_page_full, page_num_diff, two_pages):
     self.url = url
     options = webdriver.ChromeOptions()
     options.add_experimental_option("useAutomationExtension", False)
@@ -24,6 +24,7 @@ class InternetArchiveBook:
     self.is_borrow = is_borrow
     self.last_page_full = last_page_full
     self.page_num_diff = page_num_diff
+    self.two_pages = two_pages
 
   def expand_shadow_element(self, element):
     shadow_root = self.driver.execute_script('return arguments[0].shadowRoot', element)
@@ -104,30 +105,32 @@ class InternetArchiveBook:
         page_num += 1
         right_button.click()
         time.sleep(2)
-      
+
     page_numbers = self.driver.find_element(By.XPATH, page_num_xpath)
     total_pages = int(re.sub('(\(|\))', '', page_numbers.text).split(' ')[-1])
     if total_pages == self.end_page:
       total_pages += 2
     
-    # book view
-    book_view_xpath = '//*[@id="BookReader"]/div[2]/div/nav/ul[2]/li[5]/button'
-    book_view_button = self.driver.find_element(By.XPATH, book_view_xpath)
-    book_view_button.click()
-    time.sleep(1)
+    if self.two_pages:
+      # book view
+      book_view_xpath = '//*[@id="BookReader"]/div[2]/div/nav/ul[2]/li[5]/button'
+      book_view_button = self.driver.find_element(By.XPATH, book_view_xpath)
+      book_view_button.click()
+      time.sleep(1)
 
-    # double check which page we are on
-    first_flag = 0
-    left_button.click()
-    time.sleep(1)
-    right_button.click()
-    time.sleep(1)
-    page_numbers = self.driver.find_element(By.XPATH, page_num_xpath)
-    page_num_alt = int(re.sub('(\(|\))', '', page_numbers.text).split(' ')[0])
-    if page_num_alt == page_num:
-      first_flag = 1
-    time.sleep(2)
-
+      # double check which page we are on
+      first_flag = 0
+      left_button.click()
+      time.sleep(1)
+      right_button.click()
+      time.sleep(1)
+      page_numbers = self.driver.find_element(By.XPATH, page_num_xpath)
+      page_num_alt = int(re.sub('(\(|\))', '', page_numbers.text).split(' ')[0])
+      if page_num_alt == page_num:
+        first_flag = 1
+      time.sleep(2)
+    else:
+      first_flag = 0
     return right_button, left_button, page_num, total_pages, first_flag
 
   def extract_text(self):
@@ -142,49 +145,87 @@ class InternetArchiveBook:
     full_text = []
     num_backtracks = 0
     page_num_xpath = '//*[@id="BookReader"]/div[2]/div/nav/ul[2]/li[1]/p/span'
-    for i in range(page_num, total_pages, 2):
-      # check to see if on start page or end page
-      page_numbers = self.driver.find_element(By.XPATH, page_num_xpath)
-      page_number = int(re.sub('(\(|\))', '', page_numbers.text).split(' ')[0])
+    if self.two_pages:
+      for i in range(page_num, total_pages, 2):
+        # check to see if on start page or end page
+        page_numbers = self.driver.find_element(By.XPATH, page_num_xpath)
+        page_number = int(re.sub('(\(|\))', '', page_numbers.text).split(' ')[0])
 
-      if page_number <= self.end_page:
-        # take screenshot of the webpage
-        file_name = '{num}.png'.format(num=i)
-        self.driver.get_screenshot_as_file(file_name)
-        right_button.click()
-        if num_backtracks > 5:
-          time.sleep(3)
-        # extract text from the image and clean it of page numbers
-        if self.borrow:
-          text = run_OCR(file_name, 'eng', 80, 120, 3500, 1960)
-        else:
-          text = run_OCR(file_name, 'eng', 80, 30, 3500, 1960)
-        os.remove(file_name)
-        if i != page_num and page_number != self.end_page:
-          page_empty1 = is_page_empty(text[0])
-          page_empty2 = is_page_empty(text[1])
-          if page_empty1 or page_empty2:
-            num_backtracks += 1
-            left_button.click()
-            time.sleep(2)
-            self.driver.get_screenshot_as_file(file_name)
-            right_button.click()
-            if self.borrow:
-              text = run_OCR(file_name, 'eng', 80, 120, 3500, 1960)
-            else:
-              text = run_OCR(file_name, 'eng', 80, 30, 3500, 1960)
-            os.remove(file_name)
-        if i == page_num and first_flag == 0:
-          full_text.append(text[1])
-        elif i == page_num and first_flag == 1:
-          full_text.extend(text)
-        elif i != page_num and page_number != self.end_page:
-          full_text.extend(text)
-        elif self.last_page_full == 1:
-          full_text.extend(text)
-        else:
-          full_text.append(text[0])
-    
+        if page_number <= self.end_page:
+          # take screenshot of the webpage
+          file_name = '/Users/axelahdritz/coding_projects/BookCollection/{num}.png'.format(num=i)
+          self.driver.get_screenshot_as_file(file_name)
+          right_button.click()
+          if num_backtracks > 5:
+            time.sleep(3)
+          # extract text from the image and clean it of page numbers
+          if self.borrow:
+            text = run_OCR(file_name, 'eng', 80, 120, 3500, 1960, two_pages=self.two_pages)
+          else:
+            text = run_OCR(file_name, 'eng', 80, 30, 3500, 1960, two_pages=self.two_pages)
+          os.remove(file_name)
+          if i != page_num and page_number != self.end_page:
+            page_empty1 = is_page_empty(text[0])
+            page_empty2 = is_page_empty(text[1])
+            if page_empty1 or page_empty2:
+              num_backtracks += 1
+              left_button.click()
+              time.sleep(2)
+              self.driver.get_screenshot_as_file(file_name)
+              right_button.click()
+              if self.borrow:
+                text = run_OCR(file_name, 'eng', 80, 120, 3500, 1960, two_pages=self.two_pages)
+              else:
+                text = run_OCR(file_name, 'eng', 80, 30, 3500, 1960, two_pages=self.two_pages)
+              os.remove(file_name)
+          if i == page_num and first_flag == 0:
+            full_text.append(text[1])
+          elif i == page_num and first_flag == 1:
+            full_text.extend(text)
+          elif i != page_num and page_number != self.end_page:
+            full_text.extend(text)
+          elif self.last_page_full == 1:
+            full_text.extend(text)
+          else:
+            full_text.append(text[0])
+    else:
+      zoom_out_xpath = '//*[@id="BookReader"]/div[2]/div/nav/ul[2]/li[9]/button'
+      zoom_out_button = self.driver.find_element(By.XPATH, zoom_out_xpath)
+      zoom_out_button.click()
+      for i in range(page_num, total_pages):
+        # check to see if on start page or end page
+        page_numbers = self.driver.find_element(By.XPATH, page_num_xpath)
+        page_number = int(re.sub('(\(|\))', '', page_numbers.text).split(' ')[0])
+        if page_number <= self.end_page:
+          # take screenshot of the webpage
+          file_name = '/Users/axelahdritz/coding_projects/BookCollection/{num}.png'.format(num=i)
+          self.driver.get_screenshot_as_file(file_name)
+          right_button.click()
+          if num_backtracks > 5:
+            time.sleep(5)
+          # extract text from the image and clean it of page numbers
+          if self.borrow:
+            text = run_OCR(file_name, 'eng', 80, 120, 3500, 1960, two_pages=self.two_pages)
+          else:
+            text = run_OCR(file_name, 'eng', 80, 30, 3500, 1960, two_pages=self.two_pages)
+          os.remove(file_name)
+          if i != page_num and page_number != self.end_page:
+            page_empty1 = is_page_empty(text[0])
+            page_empty2 = is_page_empty(text[1])
+            if page_empty1 or page_empty2:
+              num_backtracks += 1
+              left_button.click()
+              time.sleep(2)
+              self.driver.get_screenshot_as_file(file_name)
+              right_button.click()
+              if self.borrow:
+                text = run_OCR(file_name, 'eng', 80, 120, 3500, 1960, two_pages=self.two_pages)
+              else:
+                text = run_OCR(file_name, 'eng', 80, 30, 3500, 1960, two_pages=self.two_pages)
+              os.remove(file_name)
+          full_text.append(text)
+          print(text)
+
     # return the book
     if self.is_borrow == 1:
       self.ret()

@@ -37,7 +37,5 @@ https://litteraturbanken.se/f%C3%B6rfattare/S%C3%B6derbergH/titlar/Historietter/
 https://litteraturbanken.se/f%C3%B6rfattare/KerfstedtA/titlar/Synd/sida/1/etext,7,257,SyndNovellerAvDetModernaGenombrottetsKvinnor
 https://litteraturbanken.se/f%C3%B6rfattare/BoyeK/titlar/Beb%C3%A5delse/sida/3/etext,9,362,Bebådelse
 
-
-
-
-
+TO DO
+- Deal with the first paragraph of every book, where there are false paragraph breaks due to BIG first letters

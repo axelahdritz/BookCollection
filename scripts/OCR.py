@@ -17,14 +17,15 @@ def ocr(img, lang, left, top, right, bottom):
     #os.remove(img)
     return text
 
-def ocr_data_eng(img, lang, left, top, right, bottom):
+def ocr_data_two_pages(img, lang, left, top, right, bottom):
     options = "-c preserve_interword_spaces=1 --oem 1 -l {}".format(lang)
     image=Image.open(img)
     image=image.crop((left,top,right,bottom))
     imageBox = image.getbbox()
     image = image.crop(imageBox)
-    image.save('temp.png')
-    filename1, filename2 = split_image('temp.png')
+    filename = '/Users/axelahdritz/coding_projects/BookCollection/pages/temp.png'
+    image.save(filename)
+    filename1, filename2 = split_image(filename)
     os.remove('temp.png')
     image1 = Image.open(filename1)
     image2 = Image.open(filename2)
@@ -35,10 +36,10 @@ def ocr_data_eng(img, lang, left, top, right, bottom):
     image_data = [text1,text2]
     return image_data, filename1, filename2
 
-def ocr_data_swe(img, lang, left, top, right, bottom, is_white=False, is_pdf=True):
+def ocr_data(img, lang, left, top, right, bottom, is_white, is_pdf):
     # open image, crop image, and split the image
     options = "-c preserve_interword_spaces=1 --oem 1 -l {}".format(lang)
-    filename = 'temp_swe.png'
+    filename = '/Users/axelahdritz/coding_projects/BookCollection/pages/temp.png'
     image=Image.open(img)
     image=image.crop((left,top,right,bottom))
     if is_white:
@@ -84,7 +85,7 @@ def add_spaces(df):
         text += '\n'
         print(text)
 
-def get_bounds(image_data, is_swe_pdf=True):
+def get_bounds(image_data, is_swe_pdf):
     is_empty = False
     # convert to dataframe and remove frames
     df = pd.DataFrame(image_data)
@@ -180,15 +181,15 @@ def split_image(img_file):
     width_cutoff = width // 2
     s1 = img[:, :width_cutoff]
     s2 = img[:, width_cutoff:]
-    filename1 = 'half1.png'
-    filename2 = 'half2.png'
+    filename1 = '/Users/axelahdritz/coding_projects/BookCollection/pages/half1.png'
+    filename2 = '/Users/axelahdritz/coding_projects/BookCollection/pages/half2.png'
     cv2.imwrite(filename1, s1)
     cv2.imwrite(filename2, s2)
     return filename1, filename2
 
-def run_OCR(img, lang, left, top, right, bottom, is_white=False, is_pdf=False, litbank=False):
-    if litbank:
-        image_data, filename = ocr_data_swe(img, lang, left, top, right, bottom, is_white=is_white, is_pdf=is_pdf)
+def run_OCR(img, lang, left, top, right, bottom, is_white=False, is_pdf=False, two_pages=0):
+    if two_pages == 0:
+        image_data, filename = ocr_data(img, lang, left, top, right, bottom, is_white=is_white, is_pdf=is_pdf)
         left_bound, top_bound, right_bound, bottom_bound, is_empty = get_bounds(image_data, is_swe_pdf=is_pdf)
         if is_empty:
             text = ''
@@ -196,13 +197,13 @@ def run_OCR(img, lang, left, top, right, bottom, is_white=False, is_pdf=False, l
             text = ocr(filename, 'swe', left_bound, top_bound, right_bound, bottom_bound)
         return text
     else:
-        image_data, filename1, filename2 = ocr_data_eng(img, lang, left, top, right, bottom)
-        left_bound, top_bound, right_bound, bottom_bound, is_empty= get_bounds(image_data[0])
+        image_data, filename1, filename2 = ocr_data_two_pages(img, lang, left, top, right, bottom)
+        left_bound, top_bound, right_bound, bottom_bound, is_empty= get_bounds(image_data[0], is_swe_pdf=is_pdf)
         if is_empty:
             text1 = ''
         else:
             text1 = ocr(filename1, 'eng', left_bound, top_bound, right_bound, bottom_bound)
-        left_bound, top_bound, right_bound, bottom_bound, is_empty = get_bounds(image_data[1])
+        left_bound, top_bound, right_bound, bottom_bound, is_empty = get_bounds(image_data[1], is_swe_pdf=is_pdf)
         if is_empty:
             text2 = ''
         else:

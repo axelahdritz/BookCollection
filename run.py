@@ -37,7 +37,8 @@ with open('test.csv', 'r', encoding='utf-8') as csvfile:
                                                   int(row[5]), 
                                                   int(row[9]),
                                                   int(row[10]),
-                                                  int(row[11]))
+                                                  int(row[11]),
+                                                  int(row[12]))
         english_text = eng.main()
 
         json_list = json.dumps(english_text)
