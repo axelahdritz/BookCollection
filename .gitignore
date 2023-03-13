@@ -1,0 +1,8 @@
+Books/
+env/
+models/
+scripts/__pycache__
+chromedriver
+geckodriver.log
+test.csv
+pages/

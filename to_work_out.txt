@@ -1,0 +1,43 @@
+Plays, and more specifically working out the roman numeral problem
+
+https://litteraturbanken.se/f%C3%B6rfattare/StrindbergA/titlar/Fr%C3%B6kenJulie1888/sida/V/faksimil
+https://litteraturbanken.se/f%C3%B6rfattare/LefflerAC/titlar/SannaKvinnor/sida/I/etext
+https://litteraturbanken.se/f%C3%B6rfattare/StrindbergA/titlar/M%C3%A4sterOlof/sida/11/etext
+https://litteraturbanken.se/f%C3%B6rfattare/AgrellA/titlar/R%C3%A4ddad/sida/1/faksimil
+
+
+Poems
+https://litteraturbanken.se/f%C3%B6rfattare/S%C3%B6dergranE/titlar/Dikter/sida/3/etext
+https://litteraturbanken.se/f%C3%B6rfattare/FerlinN/titlar/Barfotabarn/sida/3/etext
+https://litteraturbanken.se/f%C3%B6rfattare/FerlinN/titlar/EnD%C3%B6ddansaresVisor/sida/9/etext
+
+History Books
+https://litteraturbanken.se/f%C3%B6rfattare/OlausMagnus/titlar/HistoriaOmDeNordiskaFolken/sida/1/faksimil
+
+
+Synd noveller av det moderna genombrottets kvinnor
+https://litteraturbanken.se/f%C3%B6rfattare/KerfstedtA/titlar/Synd/sida/1/etext
+Amanda Kerfstedt
+https://archive.org/details/eva01kerfgoog/page/n9/mode/2up
+
+
+Lacking English Equivalent
+https://litteraturbanken.se/f%C3%B6rfattare/BremerF/titlar/FamillenH/sida/III/etext
+https://litteraturbanken.se/f%C3%B6rfattare/S%C3%B6derbergH/titlar/Historietter/sida/1/etext,1,164,Historietter
+https://litteraturbanken.se/f%C3%B6rfattare/KerfstedtA/titlar/Synd/sida/1/etext,7,257,SyndNovellerAvDetModernaGenombrottetsKvinnor
+https://litteraturbanken.se/f%C3%B6rfattare/BoyeK/titlar/Beb%C3%A5delse/sida/3/etext,9,362,Bebådelse
+https://litteraturbanken.se/f%C3%B6rfattare/StrindbergA/titlar/EnsamSagor/sida/9/etext
+https://litteraturbanken.se/f%C3%B6rfattare/FitinghoffL/titlar/BarnenIfr%C3%A5nFrostmofj%C3%A4llet/sida/1/etext
+https://litteraturbanken.se/f%C3%B6rfattare/FitinghoffL/titlar/BarnenIfr%C3%A5nFrostmofj%C3%A4llet/sida/1/etext
+https://litteraturbanken.se/f%C3%B6rfattare/Lagerl%C3%B6fS/titlar/EnHerrg%C3%A5rds/sida/1/etext
+
+
+swedish_source,se_start_page,se_end_page,swedish_title
+https://litteraturbanken.se/f%C3%B6rfattare/S%C3%B6derbergH/titlar/Historietter/sida/1/etext,1,164,Historietter
+https://litteraturbanken.se/f%C3%B6rfattare/KerfstedtA/titlar/Synd/sida/1/etext,7,257,SyndNovellerAvDetModernaGenombrottetsKvinnor
+https://litteraturbanken.se/f%C3%B6rfattare/BoyeK/titlar/Beb%C3%A5delse/sida/3/etext,9,362,Bebådelse
+
+
+
+
+
