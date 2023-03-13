@@ -6,3 +6,4 @@ chromedriver
 geckodriver.log
 test.csv
 pages/
+.DS_Store
